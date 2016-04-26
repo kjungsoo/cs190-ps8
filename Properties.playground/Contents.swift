@@ -42,10 +42,15 @@ struct LocationTrack {
     var locations: [CLLocation]
     var length: CLLocationDistance {
         var distance: Double = 0
-        for i in 0 ..< locations.count - 1 {
-            distance += locations[i].distanceFromLocation(locations[i+1])
+        if locations.count == 0 {
+            return 0
         }
-        return distance
+        else {
+            for i in 0 ..< (locations.count - 1) {
+                distance += locations[i].distanceFromLocation(locations[i+1])
+            }
+            return distance
+        }
     }
 }
 
@@ -72,17 +77,16 @@ class LocationTrackTestSuite: XCTestCase {
         let oakland = CLLocation(latitude: 37.8044, longitude: 122.2711)
         let moraga = CLLocation(latitude: 37.8349, longitude: 122.1297)
         let threePointTrack = LocationTrack(locations: [sanfran, oakland, moraga])
-        //let expectedResult: CLLocationDistance = 0
-        XCTAssertTrue(approx(threePointTrack, minVal: 15.0, maxVal: 30.0), "error")
+        XCTAssertTrue(approx(threePointTrack, minVal: 15000.0, maxVal: 30000.0), "error")
     }
-    
-    func approx(track: LocationTrack, minVal: Double, maxVal: Double) -> Bool {
-        if (track.length > minVal && track.length < maxVal) {
-            return true
-        }
-        else {
-            return false
-        }
+}
+
+func approx(track: LocationTrack, minVal: Double, maxVal: Double) -> Bool {
+    if track.length > minVal && track.length < maxVal {
+        return true
+    }
+    else {
+        return false
     }
 }
 /*:
