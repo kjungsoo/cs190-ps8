@@ -40,12 +40,12 @@ import CoreLocation
 struct LocationTrack {
     
     var locations: [CLLocation]
-    
     var length: CLLocationDistance {
-        //var distance = myLocation.distanceFromLocation(myBuddysLocation) / 1000
-        //let distance = locations[0].distanceFromLocation(locations[1]) + locations[1].distanceFromLocation(locations[2])
-        // this function should sum up all the distances between the locations in the track
-        return 0 // right now it just returns 1000 (in meters, which is one kilometer).
+        var distance: Double = 0
+        for i in 0 ..< locations.count - 1 {
+            distance += locations[i].distanceFromLocation(locations[i+1])
+        }
+        return distance
     }
     
 }
@@ -73,7 +73,7 @@ class LocationTrackTestSuite: XCTestCase {
         let oakland = CLLocation(latitude: 37.8044, longitude: 122.2711)
         let moraga = CLLocation(latitude: 37.8349, longitude: 122.1297)
         let threePointTrack = LocationTrack(locations: [sanfran, oakland, moraga])
-        let expectedResult: CLLocationDistance = 30
+        let expectedResult: CLLocationDistance = 0
         XCTAssertEqual(expectedResult, threePointTrack.length, "Uh ohhh")
     }
 }
